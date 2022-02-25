@@ -1,0 +1,27 @@
+/.idea*
+/build*/
+/venv*/
+/*.db
+/*.crt
+/*.key
+/callgrind.out.*
+/cmake-build*
+/dist*
+/dist/*
+
+/__pycache__/
+
+# vscode
+/.vscode/
+/.history/
+
+# python project
+/*.egg-info/
+
+# ctags, tags, etc
+GTAGS
+GPATH
+GRTAGS
+
+# sanitizerz blacklists
+/*.supp
