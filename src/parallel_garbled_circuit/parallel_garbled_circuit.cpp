@@ -1,8 +1,4 @@
-//
-// Created by nathanprat on 5/12/16.
-//
-
-#include "parallel.h"
+#include "parallel_garbled_circuit.h"
 
 #include <algorithm>
 #include <cinttypes>
@@ -14,8 +10,6 @@
 #ifndef NDEBUG
 #include <unordered_set>
 #endif
-
-#include "defines.h"
 
 namespace {
 
@@ -35,6 +29,10 @@ struct MoveableWire {
 };
 
 }  // anonymous namespace
+
+namespace interstellar {
+
+namespace garble {
 
 ParallelGarbledCircuit::ParallelGarbledCircuit() {}
 
@@ -330,3 +328,7 @@ std::vector<Block> ParallelGarbledCircuit::ExtractLabels(
 
   return extracted_labels;
 }
+
+}  // namespace garble
+
+}  // namespace interstellar

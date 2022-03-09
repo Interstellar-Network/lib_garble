@@ -2,7 +2,7 @@
 
 #include "evaluate/evaluate.h"
 #include "justgarble/justGarble.h"
-#include "justgarble/parallel.h"
+#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 #include "resources.h"
 #include "serialize/serialize.h"
 
@@ -11,12 +11,12 @@ TEST(Serialization, Adder) {
   GarbledCircuit add_garbled(std::string(interstellar::testing::data_dir) +
                              std::string("/adder.skcd.pb.bin"));
   add_garbled.garbleCircuit();
-  const ParallelGarbledCircuit reference_parallel_add_garbled(
-      std::move(add_garbled));
+  const interstellar::garble::ParallelGarbledCircuit
+      reference_parallel_add_garbled(std::move(add_garbled));
 
   auto buf = interstellar::garble::Serialize(reference_parallel_add_garbled);
 
-  ParallelGarbledCircuit res_parallel_add_garbled;
+  interstellar::garble::ParallelGarbledCircuit res_parallel_add_garbled;
   interstellar::garble::DeserializeFromBuffer(&res_parallel_add_garbled, buf);
 
   // easier to debug doing it field by field

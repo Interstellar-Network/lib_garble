@@ -15,8 +15,9 @@ namespace interstellar {
 
 namespace testing {
 
-void EvalAndDisplay(const ParallelGarbledCircuit &parallel_garbled_circuit,
-                    uint32_t width, uint32_t height, u_int32_t nb_evals) {
+void EvalAndDisplay(
+    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
+    uint32_t width, uint32_t height, u_int32_t nb_evals) {
   // TODO random?
   // TODO std::vector<block> PrepareInputLabels ?
   std::vector<u_int8_t> inputs(parallel_garbled_circuit.nb_inputs_);

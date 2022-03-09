@@ -1,7 +1,7 @@
 #include <absl/flags/flag.h>
 #include <absl/flags/parse.h>
 
-#include "justgarble/garble_helper.h"
+#include "garble_helper.h"
 #include "serialize/serialize.h"
 #include "utils_eval.h"
 
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
       interstellar::garblehelper::GarbleSkcdToBuffer(skcd_input_path_str);
   printf("garbling done\n");
 
-  ParallelGarbledCircuit pgc;
+  interstellar::garble::ParallelGarbledCircuit pgc;
   interstellar::garble::DeserializeFromBuffer(&pgc, buf);
 
   interstellar::testing::EvalAndDisplay(pgc, width, height, nb_evals);

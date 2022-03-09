@@ -1,5 +1,6 @@
 #include "garble_helper.h"
 
+#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 #include "serialize/serialize.h"
 
 namespace interstellar {
@@ -21,7 +22,7 @@ std::string GarbleSkcdToBuffer(boost::filesystem::path skcd_input_path) {
   garbledCircuit.garbleCircuit();
 
   // Now for the parallel part
-  ParallelGarbledCircuit pgc{std::move(garbledCircuit)};
+  garble::ParallelGarbledCircuit pgc{std::move(garbledCircuit)};
 
   return garble::Serialize(pgc);
 }
@@ -33,7 +34,7 @@ void GarbleSkcdToFile(boost::filesystem::path skcd_input_path,
   garbledCircuit.garbleCircuit();
 
   // Now for the parallel part
-  ParallelGarbledCircuit pgc{std::move(garbledCircuit)};
+  garble::ParallelGarbledCircuit pgc{std::move(garbledCircuit)};
 
   garble::Serialize(pgc, pgarbled_output_path);
 }

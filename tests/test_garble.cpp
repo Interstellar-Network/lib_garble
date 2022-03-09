@@ -3,7 +3,7 @@
 
 #include "data/garbled_circuit_full_adder.h"
 #include "justgarble/justGarble.h"
-#include "justgarble/parallel.h"
+#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 
 // Demonstrate some basic assertions.
 TEST(GarbleTest, Adder) {
@@ -12,7 +12,8 @@ TEST(GarbleTest, Adder) {
 
   garbled_circuit.garbleCircuit(123456789);
 
-  ParallelGarbledCircuit parallel_garbled_circuit(std::move(garbled_circuit));
+  interstellar::garble::ParallelGarbledCircuit parallel_garbled_circuit(
+      std::move(garbled_circuit));
 
   // REF lib_server HEAD detached at 2ce062c1
   // BOOST_AUTO_TEST_CASE(adder_evaluate_nopackmsg)

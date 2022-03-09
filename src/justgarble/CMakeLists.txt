@@ -5,10 +5,8 @@ find_package(Boost COMPONENTS filesystem REQUIRED)
 ################################################################################
 
 add_library(justgarble_custom
-    garble_helper.cpp
     garble_utils.cpp
     garble.cpp
-    parallel.cpp
     utils_block.cpp
     xor_gate_processor.cpp
     xor_graph.cpp
@@ -20,7 +18,6 @@ target_link_libraries(justgarble_custom
     absl::strings
 
     interstellar_protos
-    serialize_lib
 
     PUBLIC
     # public that way linking with utils_file and #include "utils_file.h" will "just work"

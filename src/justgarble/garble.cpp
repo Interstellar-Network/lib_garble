@@ -375,6 +375,7 @@ void GarbledCircuit::garbleCircuit(uint32_t seed) {
  * Get a Skcd instance init from a .blif.blif, and return the corresponding
  * GarbledCircuit"
  */
+// TODO the deserialization SHOULD be in a separate lib
 GarbledCircuit::GarbledCircuit(boost::filesystem::path skcd_input_path) {
   std::fstream input_stream(skcd_input_path.generic_string(),
                             std::ios::in | std::ios::binary);

@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
   auto height = absl::GetFlag(FLAGS_height);
   auto nb_evals = absl::GetFlag(FLAGS_nb_evals);
 
-  ParallelGarbledCircuit parallel_garbled_circuit;
+  interstellar::garble::ParallelGarbledCircuit parallel_garbled_circuit;
   interstellar::garble::DeserializeFromFile(&parallel_garbled_circuit,
                                             pgarbled_input_path_str);
 

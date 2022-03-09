@@ -2,7 +2,7 @@
 
 #include "evaluate/evaluate.h"
 #include "justgarble/justGarble.h"
-#include "justgarble/parallel.h"
+#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 #include "resources.h"
 
 // Demonstrate some basic assertions.
@@ -10,7 +10,8 @@ TEST(EvaluateTest, Adder) {
   GarbledCircuit add_garbled(std::string(interstellar::testing::data_dir) +
                              std::string("/adder.skcd.pb.bin"));
   add_garbled.garbleCircuit();
-  ParallelGarbledCircuit parallel_add_garbled(std::move(add_garbled));
+  interstellar::garble::ParallelGarbledCircuit parallel_add_garbled(
+      std::move(add_garbled));
 
   // input  i_bit1;
   // input  i_bit2;

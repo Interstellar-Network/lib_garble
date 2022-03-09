@@ -6,8 +6,6 @@
 
 #include <boost/filesystem.hpp>
 
-#include "parallel.h"
-
 namespace interstellar {
 
 namespace garblehelper {

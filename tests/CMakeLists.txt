@@ -17,10 +17,10 @@ add_library(utils_eval
 
 target_link_libraries(utils_eval
     PUBLIC
-    justgarble_custom
 
     PRIVATE
     evaluate_lib
+    pgc_lib
 
     cimg
     X11
@@ -60,7 +60,7 @@ endfunction()
 # - making it public which would not be right
 # - copy-pasting resources.h.in in tests/
  # NOTE: gtest_discover_tests requires cmake 3.10
-add_google_test(test_garble "justgarble_custom gmock")
+add_google_test(test_garble "justgarble_custom pgc_lib gmock")
 gtest_discover_tests(test_garble)
 add_google_test(test_evaluate "justgarble_custom evaluate_lib test_data gmock")
 gtest_discover_tests(test_evaluate)
@@ -68,8 +68,8 @@ add_google_test(test_serialization "serialize_lib test_data gmock")
 gtest_discover_tests(test_serialization)
 
 # basic cli(NOT googletest); but that still works fine
-add_google_test(cli_garble "justgarble_custom absl::flags absl::flags_parse")
-add_google_test(cli_garble_and_eval "utils_eval absl::flags absl::flags_parse")
+add_google_test(cli_garble "garble_helper absl::flags absl::flags_parse")
+add_google_test(cli_garble_and_eval "garble_helper utils_eval absl::flags absl::flags_parse")
 add_google_test(cli_eval "evaluate_lib utils_eval serialize_lib absl::flags absl::flags_parse")
 
 ################################################################################

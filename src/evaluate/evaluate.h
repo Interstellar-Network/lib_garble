@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "justgarble/parallel.h"
+#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 
 namespace interstellar {
 

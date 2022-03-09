@@ -23,7 +23,7 @@ target_include_directories(evaluate_lib
 target_link_libraries(evaluate_lib
     # PUBLIC b/c needed by the .h
     PUBLIC
-    justgarble_custom
+    pgc_lib
 
     PRIVATE
     # flags are only needed for GCC

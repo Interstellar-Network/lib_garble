@@ -1,14 +1,13 @@
-//
-// Created by guillaume on 9/4/15.
-//
-
-#ifndef JUSTGARBLE_PARALLEL_H
-#define JUSTGARBLE_PARALLEL_H
+#pragma once
 
 #include <fstream>
 #include <numeric>
 
-#include "justGarble.h"
+#include "justgarble/justGarble.h"
+
+namespace interstellar {
+
+namespace garble {
 
 /**
  * Part of the circuit gen pipeline, last step:
@@ -93,4 +92,6 @@ class ParallelGarbledCircuit {
  private:
 };
 
-#endif  // JUSTGARBLE_PARALLEL_H
+}  // namespace garble
+
+}  // namespace interstellar

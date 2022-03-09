@@ -45,7 +45,8 @@ std::vector<std::pair<unsigned int, size_t>> VectorGetConsecutiveAscending(
 #endif  // OUTPUTS_ENCODE_NEW
 
 void WriteProtobuf(
-    const ParallelGarbledCircuit &parallel_garbled_circuit,
+    const interstellar::garble::ParallelGarbledCircuit
+        &parallel_garbled_circuit,
     interstellarpbcircuits::ParallelGarbledCircuit *protobuf_pgc) {
   protobuf_pgc->set_n(parallel_garbled_circuit.nb_inputs_);
   protobuf_pgc->set_m(parallel_garbled_circuit.nb_outputs_);
@@ -116,7 +117,7 @@ void WriteProtobuf(
 
 void ReadProtobuf(
     const interstellarpbcircuits::ParallelGarbledCircuit &protobuf_pgc,
-    ParallelGarbledCircuit *parallel_garbled_circuit) {
+    interstellar::garble::ParallelGarbledCircuit *parallel_garbled_circuit) {
   parallel_garbled_circuit->nb_inputs_ = protobuf_pgc.n();
   parallel_garbled_circuit->nb_outputs_ = protobuf_pgc.m();
   parallel_garbled_circuit->nb_gates_ = protobuf_pgc.q();

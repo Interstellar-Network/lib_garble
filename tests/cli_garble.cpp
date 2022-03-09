@@ -1,7 +1,7 @@
 #include <absl/flags/flag.h>
 #include <absl/flags/parse.h>
 
-#include "justgarble/garble_helper.h"
+#include "garble_helper.h"
 
 ABSL_FLAG(std::string, skcd_input_path, "./skcd.pb.bin",
           "path to a skcd.pb.bin");

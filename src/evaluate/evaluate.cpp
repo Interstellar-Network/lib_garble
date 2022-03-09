@@ -68,9 +68,9 @@ int mapOutputs(const std::vector<Block> &output_labels,
 }
 
 #define DEBUG_parallelEvaluate 0
-int parallelEvaluate(const ParallelGarbledCircuit &garbledCircuit,
-                     const std::vector<Block> &extractedLabels,
-                     std::vector<Block> *outputMap) {
+int parallelEvaluate(
+    const interstellar::garble::ParallelGarbledCircuit &garbledCircuit,
+    const std::vector<Block> &extractedLabels, std::vector<Block> *outputMap) {
   AES_KEY aes_key_cipher;  // originally a DKCipherContext
   // previously: const __m128i *sched = ((__m128i *)(aes_key_cipher.rd_key));
   AES_set_encrypt_key(
