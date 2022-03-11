@@ -1,3 +1,19 @@
+// lib_garble
+// Copyright (C) 2O22  Nathan Prat
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include "xor_gate_processor.h"
 
 #include <algorithm>
@@ -23,24 +39,24 @@ int XorGateProcessor::GetNextSeedGate() const {
  * a real set for the "yet to be processed".
  * We simply need to compute the next gate here, that will be returned by
  * GetNextSeedGate().
- * 
- * PRECOND: 
+ *
+ * PRECOND:
  * - the "current seedGate"(=last returned value of GetNextSeedGate()) SHOULD be
  * in subgraph_gates
  * - subgraph_gates SHOULD be sorted
- * 
+ *
  * simple example:
- * 
+ *
  * allXorGates: 				      [2,3,5,6,7,9,10] = gatesToProcess
  * initial seedGate:          2
  * subgraph_gates: 		        [6,7,10,2]
  * end first loop: seedGate:  3
  * subgraph_gates: 		        [5,3]
  * end second loop: seedGate: 9
- * 
- * -> After "end first loop": GetNextSeedGate should return 3, and after 
+ *
+ * -> After "end first loop": GetNextSeedGate should return 3, and after
  * "end second loop" it should return 9.
- * There is no need to compute the set: gatesToProcess - {[2,6,7,10]+[3,5]} for 
+ * There is no need to compute the set: gatesToProcess - {[2,6,7,10]+[3,5]} for
  * this.
  */
 // clang-format on
