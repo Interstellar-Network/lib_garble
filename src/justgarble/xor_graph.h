@@ -21,8 +21,8 @@
 #include <cstdint>
 #include <vector>
 
-#include "../circuit_data.h"
-#include "../gate_types.h"
+#include "circuit_data.h"
+#include "gate_types.h"
 
 /**
  * Part of the XOR Directed Acyclic Graph

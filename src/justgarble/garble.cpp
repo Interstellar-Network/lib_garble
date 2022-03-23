@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <cassert>
 #include <chrono>
+#include <fstream>
 #include <numeric>
 
 #include "aes-sse.h"
@@ -81,9 +82,9 @@ ABSL_ATTRIBUTE_ALWAYS_INLINE inline void SetXorGateOutput(
 
 }  // anonymous namespace
 
-void GarbledCircuit::garbleCircuit() { garbleCircuit(time(nullptr)); }
+void GarbledCircuit::Garble() { Garble(time(nullptr)); }
 
-void GarbledCircuit::garbleCircuit(uint32_t seed) {
+void GarbledCircuit::Garble(uint32_t seed) {
   AES_KEY aes_key;
 
   std::vector<Wire> wires;
@@ -382,27 +383,12 @@ void GarbledCircuit::garbleCircuit(uint32_t seed) {
 }
 
 /**
- * Previously: a free function 'skcdToGarbled'
- * "replaces readCircuitFromFile
- * Get a Skcd instance init from a .blif.blif, and return the corresponding
- * GarbledCircuit"
+ * INTERNAL
+ * Initialize a GarbledCircuit from a protobuf(.skcd)
+ * Used by the constructors
  */
-// TODO the deserialization SHOULD be in a separate lib
-GarbledCircuit::GarbledCircuit(boost::filesystem::path skcd_input_path) {
-  std::fstream input_stream(skcd_input_path.generic_string(),
-                            std::ios::in | std::ios::binary);
-  // if (!input_stream) {
-  //   LOG(ERROR) << "GarbledCircuit: invalid file : " << skcd_input_path;
-  //   throw std::runtime_error("GarbledCircuit: input_stream failed");
-  // }
-
-  interstellarpbskcd::Skcd skcd_pb;
-  auto ok = skcd_pb.ParseFromIstream(&input_stream);
-  if (!ok) {
-    LOG(ERROR) << "GarbledCircuit: parsing failed : " << skcd_input_path;
-    throw std::runtime_error("GarbledCircuit: parsing failed");
-  }
-
+void GarbledCircuit::InitializeFromSkcdProtobuf(
+    const interstellarpbskcd::Skcd &skcd_pb) {
   // "lib_python: a msgpacked skcd is ONE list: [MAGIC_SKC0, n, m, q] + A + B +
   // GO + GT + O"
 
@@ -446,6 +432,44 @@ GarbledCircuit::GarbledCircuit(boost::filesystem::path skcd_input_path) {
   circuit_data_.input_gate_count.assign(
       skcd_pb.circuit_data().input_gate_count().begin(),
       skcd_pb.circuit_data().input_gate_count().end());
+
+  for (auto const &[key, val] : skcd_pb.config()) {
+    config_.try_emplace(key, val);
+  }
+
+  // TODO SHOULD add a "validity check" for the whole instance; maybe a
+  // CRC/other hash? or more basic?
+}
+
+/**
+ * Previously: a free function 'skcdToGarbled'
+ * "replaces readCircuitFromFile
+ * Get a Skcd instance init from a .blif.blif, and return the corresponding
+ * GarbledCircuit"
+ */
+// TODO the deserialization SHOULD be in a separate lib
+GarbledCircuit::GarbledCircuit(std::filesystem::path skcd_input_path) {
+  std::fstream input_stream(skcd_input_path.generic_string(),
+                            std::ios::in | std::ios::binary);
+  interstellarpbskcd::Skcd skcd_pb;
+  auto ok = skcd_pb.ParseFromIstream(&input_stream);
+  if (!ok) {
+    LOG(ERROR) << "GarbledCircuit: parsing failed : " << skcd_input_path;
+    throw std::runtime_error("GarbledCircuit: parsing failed");
+  }
+
+  InitializeFromSkcdProtobuf(skcd_pb);
+}
+
+GarbledCircuit::GarbledCircuit(std::string_view skcd_buffer) {
+  interstellarpbskcd::Skcd skcd_pb;
+  auto ok = skcd_pb.ParseFromArray(skcd_buffer.data(), skcd_buffer.size());
+  if (!ok) {
+    LOG(ERROR) << "GarbledCircuit: parsing failed";
+    throw std::runtime_error("GarbledCircuit: parsing failed");
+  }
+
+  InitializeFromSkcdProtobuf(skcd_pb);
 }
 
 GarbledCircuit::~GarbledCircuit() = default;

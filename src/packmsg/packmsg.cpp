@@ -14,23 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once
+#include "packmsg.h"
 
-#include "packmsg/packmsg.h"
-#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
+namespace interstellar::packmsg {
 
-namespace interstellar {
+Packmsg::Packmsg(const std::vector<Block> &garbled_values,
+                 const std::vector<uint64_t> &xormask)
+    : garbled_values_(garbled_values), xormask_(xormask){};
 
-namespace testing {
-
-void EvalAndDisplay(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals);
-
-void EvalAndDisplayWithPackmsg(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals);
-
-}  // namespace testing
-
-}  // namespace interstellar
+}  // namespace interstellar::packmsg

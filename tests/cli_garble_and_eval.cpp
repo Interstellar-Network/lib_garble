@@ -18,12 +18,12 @@
 #include <absl/flags/parse.h>
 
 #include "garble_helper.h"
-#include "serialize/serialize.h"
+#include "serialize_pgc/serialize.h"
+#include "utils/utils_files.h"
 #include "utils_eval.h"
 
-// TODO width and height SHOULD come from the .skcd/.pgarbled
-ABSL_FLAG(uint32_t, width, 224, "display width");
-ABSL_FLAG(uint32_t, height, 96, "display height");
+using namespace interstellar;
+
 ABSL_FLAG(std::string, skcd_input_path, "./skcd.pb.bin",
           "path to a skcd.pb.bin");
 ABSL_FLAG(uint32_t, nb_evals, 20, "number of evaluations to combine");
@@ -39,19 +39,15 @@ int main(int argc, char** argv) {
   absl::ParseCommandLine(argc, argv);
 
   auto skcd_input_path_str = absl::GetFlag(FLAGS_skcd_input_path);
-  auto width = absl::GetFlag(FLAGS_width);
-  auto height = absl::GetFlag(FLAGS_height);
   auto nb_evals = absl::GetFlag(FLAGS_nb_evals);
   auto pgarbled_output_path_str = absl::GetFlag(FLAGS_pgarbled_output_path);
 
-  auto buf =
-      interstellar::garblehelper::GarbleSkcdToBuffer(skcd_input_path_str);
+  auto skcd_buf =
+      interstellar::interstellar_testing::utils::ReadFile(skcd_input_path_str);
+  garble::ParallelGarbledCircuit pgc = garble::GarbleSkcdFromBuffer(skcd_buf);
   printf("garbling done\n");
 
-  interstellar::garble::ParallelGarbledCircuit pgc;
-  interstellar::garble::DeserializeFromBuffer(&pgc, buf);
-
-  interstellar::testing::EvalAndDisplay(pgc, width, height, nb_evals);
+  testing::EvalAndDisplay(pgc, nb_evals);
 
   return 0;
 }

@@ -196,7 +196,6 @@ class Block {
     return b;
   }
 
-  // Needed for Boost test
   // And also mapOutputs [dev only]
   bool operator==(const Block &other) const {
     return high_ == other.high_ && low_ == other.low_;

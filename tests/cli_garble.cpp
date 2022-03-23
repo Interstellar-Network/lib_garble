@@ -18,6 +18,10 @@
 #include <absl/flags/parse.h>
 
 #include "garble_helper.h"
+#include "serialize_pgc/serialize.h"
+#include "utils/utils_files.h"
+
+using namespace interstellar;
 
 ABSL_FLAG(std::string, skcd_input_path, "./skcd.pb.bin",
           "path to a skcd.pb.bin");
@@ -30,8 +34,11 @@ int main(int argc, char** argv) {
   auto skcd_input_path_str = absl::GetFlag(FLAGS_skcd_input_path);
   auto pgarbled_output_path_str = absl::GetFlag(FLAGS_pgarbled_output_path);
 
-  interstellar::garblehelper::GarbleSkcdToFile(skcd_input_path_str,
-                                               pgarbled_output_path_str);
+  auto skcd_buf =
+      interstellar::interstellar_testing::utils::ReadFile(skcd_input_path_str);
+  garble::ParallelGarbledCircuit pgc = garble::GarbleSkcdFromBuffer(skcd_buf);
+
+  garble::Serialize(pgc, pgarbled_output_path_str);
 
   printf("garbling done\n");
 

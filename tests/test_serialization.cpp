@@ -16,19 +16,18 @@
 
 #include <gtest/gtest.h>
 
-#include "evaluate/evaluate.h"
 #include "justgarble/justGarble.h"
 #include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 #include "resources.h"
-#include "serialize/serialize.h"
+#include "serialize_pgc/serialize.h"
 
-// Demonstrate some basic assertions.
-TEST(Serialization, Adder) {
-  GarbledCircuit add_garbled(std::string(interstellar::testing::data_dir) +
-                             std::string("/adder.skcd.pb.bin"));
-  add_garbled.garbleCircuit();
+TEST(Serialization, DeserializeAdder) {
+  GarbledCircuit garbled(
+      std::filesystem::path(interstellar::interstellar_testing::data_dir) /
+      std::string("adder.skcd.pb.bin"));
+  garbled.Garble();
   const interstellar::garble::ParallelGarbledCircuit
-      reference_parallel_add_garbled(std::move(add_garbled));
+      reference_parallel_add_garbled(std::move(garbled));
 
   auto buf = interstellar::garble::Serialize(reference_parallel_add_garbled);
 

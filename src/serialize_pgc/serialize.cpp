@@ -129,6 +129,10 @@ void WriteProtobuf(
   interstellarpbcircuits::Block *global_key = protobuf_pgc->mutable_globalkey();
   global_key->set_high(parallel_garbled_circuit.global_key_.GetHigh());
   global_key->set_low(parallel_garbled_circuit.global_key_.GetLow());
+
+  for (auto const &[key, val] : parallel_garbled_circuit.config_) {
+    (*protobuf_pgc->mutable_config())[key] = val;
+  }
 }
 
 void ReadProtobuf(
@@ -205,6 +209,10 @@ void ReadProtobuf(
 
   parallel_garbled_circuit->global_key_ =
       Block(protobuf_pgc.globalkey().high(), protobuf_pgc.globalkey().low());
+
+  for (auto const &[key, val] : protobuf_pgc.config()) {
+    parallel_garbled_circuit->config_.try_emplace(key, val);
+  }
 }
 
 }  // anonymous namespace
@@ -230,7 +238,7 @@ std::string Serialize(const ParallelGarbledCircuit &parallel_garbled_circuit) {
  * Serialize to a file using Protobuf
  */
 void Serialize(const ParallelGarbledCircuit &parallel_garbled_circuit,
-               boost::filesystem::path pgarbled_output_path) {
+               std::filesystem::path pgarbled_output_path) {
   interstellarpbcircuits::ParallelGarbledCircuit protobuf_pgc;
   WriteProtobuf(parallel_garbled_circuit, &protobuf_pgc);
 
@@ -248,7 +256,7 @@ void Serialize(const ParallelGarbledCircuit &parallel_garbled_circuit,
  * Deserialize from a file
  */
 void DeserializeFromFile(ParallelGarbledCircuit *parallel_garbled_circuit,
-                         boost::filesystem::path pgarbled_input_path) {
+                         std::filesystem::path pgarbled_input_path) {
   std::fstream input_stream(pgarbled_input_path.generic_string(),
                             std::ios::in | std::ios::binary);
   // if (!input_stream) {

@@ -14,23 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once
+#include "utils_files.h"
 
-#include "packmsg/packmsg.h"
-#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
+#include <fstream>
 
-namespace interstellar {
+namespace interstellar::interstellar_testing::utils {
 
-namespace testing {
+std::string ReadFile(std::filesystem::path path) {
+  // TODO avoid useless string copy x2?
+  // TODO error handling
+  std::ifstream input_stream_v(path, std::ios_base::binary);
+  std::ostringstream sstr;
+  sstr << input_stream_v.rdbuf();
+  return sstr.str();
+}
 
-void EvalAndDisplay(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals);
-
-void EvalAndDisplayWithPackmsg(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals);
-
-}  // namespace testing
-
-}  // namespace interstellar
+}  // namespace interstellar::interstellar_testing::utils

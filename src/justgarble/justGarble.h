@@ -35,14 +35,21 @@
 #ifndef justGarble
 #define justGarble 1
 
-#include <boost/filesystem.hpp>
+#include <absl/container/flat_hash_map.h>
+
+#include <filesystem>
 #include <map>
 #include <memory>
 #include <vector>
 
-#include "../circuit_data.h"
-#include "../gate_types.h"
 #include "block.h"
+#include "circuit_data.h"
+#include "gate_types.h"
+
+// forward declare to avoid public dependency on protobuf
+namespace interstellarpbskcd {
+class Skcd;
+}
 
 class GarbledGate {
  public:
@@ -120,13 +127,25 @@ void GetFullAdder(GarbledCircuit* garbled_circuit);
 // TODO? convert all array to vectors, useful for tests(need serialization)
 class GarbledCircuit {
  public:
-  explicit GarbledCircuit(boost::filesystem::path skcd_input_path);
+  /**
+   * Construct from a Protobuf .skcd (file)
+   */
+  explicit GarbledCircuit(std::filesystem::path skcd_input_path);
 
+  /**
+   * Construct from a Protobuf .skcd (buffer)
+   */
+  explicit GarbledCircuit(std::string_view skcd_buffer);
+
+  // NO COPY
   GarbledCircuit(const GarbledCircuit&) = delete;
   GarbledCircuit& operator=(const GarbledCircuit&) = delete;
+  // NO MOVE
 
   // TEST ONLY
-  void garbleCircuit();
+  void Garble(uint32_t seed);
+
+  void Garble();
 
   ~GarbledCircuit();
 
@@ -184,6 +203,7 @@ class GarbledCircuit {
   auto& GetOutputs() { return outputs_; }
   auto& GetInputLabels() { return input_labels_; }
   auto& GetOuputsLabels() { return output_labels_; }
+  auto& GetConfig() { return config_; };
 
  private:
   uint32_t nb_inputs_, nb_outputs_, nb_gates_, nb_wires_;
@@ -206,17 +226,18 @@ class GarbledCircuit {
   Block global_key_;
 
   CircuitData circuit_data_;
+  absl::flat_hash_map<std::string, uint32_t> config_;
+
+  void InitializeFromSkcdProtobuf(const interstellarpbskcd::Skcd& skcd_pb);
 
   // TEST ONLY, cf "friend class"/FRIEND_TEST
   GarbledCircuit() {}
 
-  void garbleCircuit(uint32_t seed);
-
   // gtest_prod.h
   // #define FRIEND_TEST(test_case_name, test_name)
   //  friend class test_case_name##_##test_name##_Test
-  // FRIEND_TEST(GarbleTest, Adder);
-  friend class GarbleTest_Adder_Test;
+  // FRIEND_TEST(GarbleTest, ReferenceAdder);
+  friend class GarbleReferenceTest_Adder_Test;
   friend void interstellar::test::GetFullAdder(GarbledCircuit* garbled_circuit);
 };
 

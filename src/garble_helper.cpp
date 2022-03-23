@@ -17,44 +17,21 @@
 #include "garble_helper.h"
 
 #include "parallel_garbled_circuit/parallel_garbled_circuit.h"
-#include "serialize/serialize.h"
+#include "serialize_pgc/serialize.h"
 
 namespace interstellar {
 
-namespace garblehelper {
+namespace garble {
 
-/**
- * Garble a ".skcd"(in pratice a .blif.blif, given as BlifParser)
- * NOTE: contrary to its name, a "GarbledCircuit" here is basically just a SKCD
- * circuit.
- *
- * archive version: "Base" function: garble a .skcd given by path.
- *
- * return a ParallelGarbledCircuit
- */
-std::string GarbleSkcdToBuffer(boost::filesystem::path skcd_input_path) {
-  GarbledCircuit garbledCircuit(skcd_input_path);
+ParallelGarbledCircuit GarbleSkcdFromBuffer(std::string_view skcd_buffer) {
+  GarbledCircuit garbledCircuit(skcd_buffer);
 
-  garbledCircuit.garbleCircuit();
+  garbledCircuit.Garble();
 
   // Now for the parallel part
-  garble::ParallelGarbledCircuit pgc{std::move(garbledCircuit)};
-
-  return garble::Serialize(pgc);
+  return ParallelGarbledCircuit(std::move(garbledCircuit));
 }
 
-void GarbleSkcdToFile(boost::filesystem::path skcd_input_path,
-                      boost::filesystem::path pgarbled_output_path) {
-  GarbledCircuit garbledCircuit(skcd_input_path);
-
-  garbledCircuit.garbleCircuit();
-
-  // Now for the parallel part
-  garble::ParallelGarbledCircuit pgc{std::move(garbledCircuit)};
-
-  garble::Serialize(pgc, pgarbled_output_path);
-}
-
-}  // namespace garblehelper
+}  // namespace garble
 
 }  // namespace interstellar

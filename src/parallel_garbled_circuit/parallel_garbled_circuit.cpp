@@ -314,6 +314,8 @@ ParallelGarbledCircuit::ParallelGarbledCircuit(
   assert(output_labels.size() == static_cast<size_t>(2 * nb_outputs_) &&
          "outputLabels: size does not match!");
   output_labels_.swap(output_labels);
+
+  config_.swap(garbledCircuit.GetConfig());
 }
 
 /**

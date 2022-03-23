@@ -2,10 +2,10 @@
 
 namespace interstellar {
 
-namespace testing {
+namespace interstellar_testing {
 
 static char const constexpr *const data_dir = "@RESOURCE_DIR@";
 
-}  // namespace testing
+}  // namespace interstellar_testing
 
 }  // namespace interstellar
