@@ -24,6 +24,7 @@ include(deps/protos.cmake)
 ################################################################################
 
 # the main sources
+add_subdirectory(data)
 add_subdirectory(src)
 
 if (interstellar_garble_BUILD_TESTS)

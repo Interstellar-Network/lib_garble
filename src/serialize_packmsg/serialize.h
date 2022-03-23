@@ -16,21 +16,32 @@
 
 #pragma once
 
+#include <filesystem>
+#include <string>
+
 #include "packmsg/packmsg.h"
-#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
+#include "packmsg/prepackmsg.h"
 
-namespace interstellar {
+namespace interstellar::packmsg {
 
-namespace testing {
+/**
+ * Serialize PrePackmsg to a buffer using Protobuf
+ */
+std::string SerializePrepackmsg(const PrePackmsg& pre_packmsg);
 
-void EvalAndDisplay(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals);
+/**
+ * Deserialize PrePackmsg from a buffer
+ */
+PrePackmsg DeserializePrepackmsgFromBuffer(const std::string& buffer);
 
-void EvalAndDisplayWithPackmsg(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals);
+/**
+ * Serialize Packmsgto a buffer using Protobuf
+ */
+std::string SerializePackmsg(const Packmsg& packmsg);
 
-}  // namespace testing
+/**
+ * Deserialize Packmsg from a buffer
+ */
+Packmsg DeserializePackmsgFromBuffer(const std::string& buffer);
 
-}  // namespace interstellar
+}  // namespace interstellar::packmsg

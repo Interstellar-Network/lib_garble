@@ -21,13 +21,15 @@
 #include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 #include "resources.h"
 
-// Demonstrate some basic assertions.
+using namespace interstellar::garble;
+using namespace interstellar::packmsg;
+
 TEST(EvaluateTest, Adder) {
-  GarbledCircuit add_garbled(std::string(interstellar::testing::data_dir) +
-                             std::string("/adder.skcd.pb.bin"));
-  add_garbled.garbleCircuit();
-  interstellar::garble::ParallelGarbledCircuit parallel_add_garbled(
-      std::move(add_garbled));
+  GarbledCircuit garbled(
+      std::filesystem::path(interstellar::interstellar_testing::data_dir) /
+      std::string("adder.skcd.pb.bin"));
+  garbled.Garble();
+  ParallelGarbledCircuit pgc(std::move(garbled));
 
   // input  i_bit1;
   // input  i_bit2;
@@ -44,9 +46,8 @@ TEST(EvaluateTest, Adder) {
   };
 
   std::vector<std::vector<uint8_t>> all_outputs;
-  for (const auto &inputs : all_inputs) {
-    all_outputs.emplace_back(
-        interstellar::garble::EvaluateWithInputs(parallel_add_garbled, inputs));
+  for (const auto& inputs : all_inputs) {
+    all_outputs.emplace_back(EvaluateWithInputs(pgc, inputs));
   }
 
   EXPECT_EQ(all_expected_outputs, all_outputs);

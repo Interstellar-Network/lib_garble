@@ -66,6 +66,8 @@ compile_proto_cpp("./deps/protos/circuits/circuit.proto")
 # ideally we SHOULD split the proto in two distinct lib
 # .skcd for the input, .pgarbled for the output and both are separate folders in src/
 compile_proto_cpp("./deps/protos/skcd/skcd.proto")
+compile_proto_cpp("./deps/protos/circuits/prepackmsg.proto")
+compile_proto_cpp("./deps/protos/circuits/packmsg.proto")
 
 ################################################################################
 

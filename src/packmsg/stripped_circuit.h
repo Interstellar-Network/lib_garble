@@ -16,21 +16,33 @@
 
 #pragma once
 
-#include "packmsg/packmsg.h"
+#include <absl/random/bit_gen_ref.h>
+
+#include <string>
+#include <vector>
+
 #include "parallel_garbled_circuit/parallel_garbled_circuit.h"
+#include "prepackmsg.h"
 
-namespace interstellar {
+namespace interstellar::packmsg {
 
-namespace testing {
+/**
+ * return:
+ * - a MODIFIED PGC; this is DESTRUCTIVE
+ * - the corresponding PrePackmsg
+ */
+void StripCircuit(garble::ParallelGarbledCircuit *pgc, PrePackmsg *pre_packmsg,
+                  const std::vector<uint8_t> &digits);
 
-void EvalAndDisplay(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals);
+namespace internal {
 
-void EvalAndDisplayWithPackmsg(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals);
+/**
+ * TEST/INTERNAL USE ONLY
+ * overload StripCircuit with a user-given absl::BitGen
+ */
+void StripCircuit(garble::ParallelGarbledCircuit *pgc, PrePackmsg *pre_packmsg,
+                  const std::vector<uint8_t> &digits, absl::BitGenRef bitgen);
 
-}  // namespace testing
+}  // namespace internal
 
-}  // namespace interstellar
+}  // namespace interstellar::packmsg

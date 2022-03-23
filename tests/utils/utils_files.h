@@ -16,21 +16,11 @@
 
 #pragma once
 
-#include "packmsg/packmsg.h"
-#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
+#include <filesystem>
+#include <string>
 
-namespace interstellar {
+namespace interstellar::interstellar_testing::utils {
 
-namespace testing {
+std::string ReadFile(std::filesystem::path path);
 
-void EvalAndDisplay(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals);
-
-void EvalAndDisplayWithPackmsg(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals);
-
-}  // namespace testing
-
-}  // namespace interstellar
+}  // namespace interstellar::interstellar_testing::utils

@@ -1,22 +1,22 @@
 ################################################################################
+# PUBLIC API
 
-add_library(pgc_lib
-    parallel_garbled_circuit.cpp
+add_library(serialize_pgc_lib
+    serialize.cpp
 )
 
-target_include_directories(pgc_lib
+target_include_directories(serialize_pgc_lib
     INTERFACE
     # that way users will need to #include "evaluate/evaluate.h"
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-target_link_libraries(pgc_lib
+target_link_libraries(serialize_pgc_lib
     # PUBLIC b/c needed by the .h
     PUBLIC
-    absl::flat_hash_map
-
-    justgarble_custom
+    pgc_lib
 
     PRIVATE
-
+    glog::glog
+    interstellar_protos
 )

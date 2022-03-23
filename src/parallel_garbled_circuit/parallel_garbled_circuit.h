@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <absl/container/flat_hash_map.h>
+
 #include <fstream>
 #include <numeric>
 
@@ -54,6 +56,7 @@ class ParallelGarbledCircuit {
   // output of eval (should be in another struct)
   std::vector<uint32_t> outputs_;
   Block global_key_;
+  absl::flat_hash_map<std::string, uint32_t> config_;
 
   /**
    * Main ctor

@@ -16,21 +16,39 @@
 
 #pragma once
 
-#include "packmsg/packmsg.h"
-#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
+#include <string>
+#include <vector>
+
+#include "justgarble/block.h"
 
 namespace interstellar {
 
-namespace testing {
+namespace packmsg {
 
-void EvalAndDisplay(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals);
+class Packmsg {
+ public:
+  Packmsg(const std::vector<Block> &garbled_values,
+          const std::vector<uint64_t> &xormask);
 
-void EvalAndDisplayWithPackmsg(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals);
+  // NO COPY
+  // NO MOVE
+  Packmsg(Packmsg const &) = delete;
+  void operator=(Packmsg const &x) = delete;
 
-}  // namespace testing
+  auto const &GetXormask() const { return xormask_; };
+  auto const &GetGarbledValues() const { return garbled_values_; };
+
+  // INTERNAL/TEST ONLY
+  bool operator==(const Packmsg &other) const {
+    return (garbled_values_ == other.garbled_values_) &&
+           (xormask_ == other.xormask_);
+  };
+
+ private:
+  std::vector<Block> garbled_values_;
+  std::vector<uint64_t> xormask_;
+};
+
+}  // namespace packmsg
 
 }  // namespace interstellar

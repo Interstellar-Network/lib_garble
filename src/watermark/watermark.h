@@ -16,21 +16,18 @@
 
 #pragma once
 
-#include "packmsg/packmsg.h"
-#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
+#include <string>
+#include <vector>
 
-namespace interstellar {
+namespace interstellar::internal::watermark {
 
-namespace testing {
+/**
+ * return: an "image"(as a raw buffer)
+ */
+std::vector<uint8_t> DrawText(const std::wstring &text_to_draw,
+                              uint32_t font_size, uint32_t width,
+                              uint32_t height);
 
-void EvalAndDisplay(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals);
+std::vector<uint8_t> WatermarkToBits(const std::vector<uint8_t> &img);
 
-void EvalAndDisplayWithPackmsg(
-    const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals);
-
-}  // namespace testing
-
-}  // namespace interstellar
+}  // namespace interstellar::internal::watermark

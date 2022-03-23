@@ -16,26 +16,17 @@
 
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
+
+#include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 
 namespace interstellar {
 
-namespace garblehelper {
+namespace garble {
 
-/**
- * Garble a ".skcd"(in pratice a .blif.blif, given as BlifParser)
- * NOTE: contrary to its name, a "GarbledCircuit" here is basically just a SKCD
- * circuit.
- *
- * archive version: "Base" function: garble a .skcd given by path.
- *
- * return a ParallelGarbledCircuit serialized with Protobuf
- */
-std::string GarbleSkcdToBuffer(boost::filesystem::path skcd_input_path);
+// IMPORTANT this is the API used by api_garble!
+ParallelGarbledCircuit GarbleSkcdFromBuffer(std::string_view skcd_buffer);
 
-void GarbleSkcdToFile(boost::filesystem::path skcd_input_path,
-                      boost::filesystem::path pgarbled_output_path);
-
-}  // namespace garblehelper
+}  // namespace garble
 
 }  // namespace interstellar

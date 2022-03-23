@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <string>
 
 #include "parallel_garbled_circuit/parallel_garbled_circuit.h"
@@ -34,13 +34,13 @@ std::string Serialize(const ParallelGarbledCircuit& parallel_garbled_circuit);
  * Serialize to a file using Protobuf
  */
 void Serialize(const ParallelGarbledCircuit& parallel_garbled_circuit,
-               boost::filesystem::path pgarbled_output_path);
+               std::filesystem::path pgarbled_output_path);
 
 /**
  * Deserialize from a file
  */
 void DeserializeFromFile(ParallelGarbledCircuit* parallel_garbled_circuit,
-                         boost::filesystem::path pgarbled_input_path);
+                         std::filesystem::path pgarbled_input_path);
 
 /**
  * Deserialize from a buffer
