@@ -59,6 +59,8 @@ function(compile_proto_cpp SRC_PROTO_PATH)
     set(PROTO_GENERATED_CPP "${PROTO_GENERATED_CPP};${hw_proto_srcs};" PARENT_SCOPE)
 endfunction(compile_proto_cpp)
 
+################################################################################
+
 compile_proto_cpp("./deps/protos/circuits/block.proto")
 compile_proto_cpp("./deps/protos/circuits/circuit.proto")
 # ideally we SHOULD split the proto in two distinct lib
@@ -82,21 +84,4 @@ target_include_directories(interstellar_protos
 target_link_libraries(interstellar_protos
     PRIVATE
     ${_PROTOBUF_LIBPROTOBUF}
-)
-
-################################################################################
-# fix compile flags for protobuf
-
-# TODO both SHOULD be PRIVATE flags
-target_compile_options(libprotobuf
-    PUBLIC
-    -Wno-invalid-noreturn
-    -Wno-unused-parameter
-    -Wno-sign-compare
-)
-
-target_compile_options(protoc
-    PUBLIC
-    -Wno-unused-parameter
-    -Wno-sign-compare
 )
