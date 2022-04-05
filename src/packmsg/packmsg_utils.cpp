@@ -18,8 +18,6 @@
 
 #include <glog/logging.h>
 
-#include "watermark/watermark.h"
-
 namespace {
 
 // map: 0-9 -> 7 segments

@@ -39,7 +39,6 @@ target_link_libraries(packmsg_utils
 
     PRIVATE
     glog::glog
-    watermark_lib
 )
 
 ################################################################################
