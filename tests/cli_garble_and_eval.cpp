@@ -29,6 +29,8 @@ ABSL_FLAG(std::string, skcd_input_path, "./skcd.pb.bin",
 ABSL_FLAG(uint32_t, nb_evals, 20, "number of evaluations to combine");
 ABSL_FLAG(std::string, pgarbled_output_path, "./pgarbled.pb.bin",
           "output pgarbled.pb.bin");
+ABSL_FLAG(std::string, png_output_path, "",
+          "if not set it will display using X11 instead of write a .png");
 
 /**
  * This is just a way to have an all in one cli that garbles then eval.
@@ -41,13 +43,14 @@ int main(int argc, char** argv) {
   auto skcd_input_path_str = absl::GetFlag(FLAGS_skcd_input_path);
   auto nb_evals = absl::GetFlag(FLAGS_nb_evals);
   auto pgarbled_output_path_str = absl::GetFlag(FLAGS_pgarbled_output_path);
+  auto png_output_path_str = absl::GetFlag(FLAGS_png_output_path);
 
   auto skcd_buf =
       interstellar::interstellar_testing::utils::ReadFile(skcd_input_path_str);
   garble::ParallelGarbledCircuit pgc = garble::GarbleSkcdFromBuffer(skcd_buf);
   printf("garbling done\n");
 
-  testing::EvalAndDisplay(pgc, nb_evals);
+  testing::EvalAndDisplay(pgc, nb_evals, png_output_path_str);
 
   return 0;
 }

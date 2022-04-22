@@ -23,13 +23,26 @@ namespace interstellar {
 
 namespace testing {
 
+/**
+ * param png_output_path: if empty it will use cimg.display() instead of write
+ * to file. Therefore:
+ * - png_output_path set: MUST use libpng
+ * - png_output_path unset: MUST use X11
+ */
 void EvalAndDisplay(
     const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals);
+    u_int32_t nb_evals, std::string_view png_output_path);
 
+/**
+ * param png_output_path: if empty it will use cimg.display() instead of write
+ * to file. Therefore:
+ * - png_output_path set: MUST use libpng
+ * - png_output_path unset: MUST use X11
+ */
 void EvalAndDisplayWithPackmsg(
     const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals);
+    const packmsg::Packmsg &packmsg, u_int32_t nb_evals,
+    std::string_view png_output_path);
 
 }  // namespace testing
 

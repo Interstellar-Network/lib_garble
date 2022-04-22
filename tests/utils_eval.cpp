@@ -21,6 +21,7 @@
 //                           '2' to use the Microsoft GDI32 framework.
 // else lots of eg "CImg.h:10322: undefined reference to `XMoveWindow'"
 #define cimg_display 1
+#define cimg_use_png
 #include <CImg.h>
 
 #include <random>
@@ -32,7 +33,8 @@ namespace {
 using interstellar::garble::ParallelGarbledCircuit;
 
 void FinalizeOutputsAndDisplay(std::vector<u_int8_t> *outputs, u_int32_t width,
-                               uint32_t height) {
+                               uint32_t height,
+                               std::string_view png_output_path) {
   // outputs are (0,1) but an image SHOULD be (0,255)
   std::transform(outputs->begin(), outputs->end(), outputs->begin(),
                  [](auto c) { return c * 255; });
@@ -54,12 +56,19 @@ void FinalizeOutputsAndDisplay(std::vector<u_int8_t> *outputs, u_int32_t width,
 
   std::copy(outputs->begin(), outputs->end(), display_img.begin());
 
-  display_img.display();
+  // if we have an output path we can skip the display
+  // NOTE: this allows to call the eval in a env without X11(eg docker, etc)
+  if (png_output_path.empty()) {
+    display_img.display();
+  } else {
+    display_img.save(png_output_path.data());
+  }
 }
 
 template <typename F>
 void BaseEvalAndDisplay(const ParallelGarbledCircuit &parallel_garbled_circuit,
-                        u_int32_t nb_evals, F eval_func) {
+                        u_int32_t nb_evals, std::string_view png_output_path,
+                        F eval_func) {
   // TODO random?
   // TODO std::vector<block> PrepareInputLabels ?
   std::vector<u_int8_t> inputs(parallel_garbled_circuit.nb_inputs_);
@@ -91,7 +100,7 @@ void BaseEvalAndDisplay(const ParallelGarbledCircuit &parallel_garbled_circuit,
     }
   }
 
-  FinalizeOutputsAndDisplay(&outputs, width, height);
+  FinalizeOutputsAndDisplay(&outputs, width, height, png_output_path);
 }
 
 }  // anonymous namespace
@@ -102,8 +111,8 @@ namespace testing {
 
 void EvalAndDisplay(
     const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    u_int32_t nb_evals) {
-  BaseEvalAndDisplay(parallel_garbled_circuit, nb_evals,
+    u_int32_t nb_evals, std::string_view png_output_path) {
+  BaseEvalAndDisplay(parallel_garbled_circuit, nb_evals, png_output_path,
                      [](const garble::ParallelGarbledCircuit &pgc,
                         const std::vector<u_int8_t> &in) {
                        return interstellar::garble::EvaluateWithInputs(pgc, in);
@@ -112,9 +121,10 @@ void EvalAndDisplay(
 
 void EvalAndDisplayWithPackmsg(
     const garble::ParallelGarbledCircuit &parallel_garbled_circuit,
-    const packmsg::Packmsg &packmsg, u_int32_t nb_evals) {
+    const packmsg::Packmsg &packmsg, u_int32_t nb_evals,
+    std::string_view png_output_path) {
   BaseEvalAndDisplay(
-      parallel_garbled_circuit, nb_evals,
+      parallel_garbled_circuit, nb_evals, png_output_path,
       [&p = std::as_const(packmsg)](const garble::ParallelGarbledCircuit &pgc,
                                     const std::vector<u_int8_t> &in) {
         return interstellar::garble::EvaluateWithPackmsg(pgc, in, p);

@@ -84,7 +84,7 @@ ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 RUN apt-get update && apt-get install -y \
     # TEMP: only for the eval_cli
-    libx11-6 \
+    libx11-6 libpng16-16 \
     && rm -rf /var/lib/apt/lists/*
 
 # NOTE if "no shared libs to copy" above; we  MUST add a random file else COPY fails with:

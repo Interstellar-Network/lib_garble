@@ -1,4 +1,15 @@
 ################################################################################
+# NOTE: only for some eval cli(required by cimg.save_png()
+find_package(PNG REQUIRED)
+
+# we need b/c we are dynamically listing the required libs for the Rust wrapper
+# and without this we would be missing the system libs(eg boost, libpng, etc)
+# ie all those obtained using find_package b/c IMPORTED are LOCAL by default
+# cf https://gitlab.kitware.com/cmake/cmake/-/issues/17256
+# MAYBE ALIAS_GLOBAL?
+set_target_properties(PNG::PNG PROPERTIES IMPORTED_GLOBAL TRUE)
+
+################################################################################
 
 include(${PROJECT_SOURCE_DIR}/3rd_party/cimg.cmake)
 include(${PROJECT_SOURCE_DIR}/3rd_party/googletest.cmake)
@@ -26,6 +37,7 @@ target_link_libraries(utils_eval
 
     cimg
     X11
+    PNG::PNG
 )
 
 ################################################################################
