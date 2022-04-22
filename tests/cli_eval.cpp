@@ -23,18 +23,22 @@
 ABSL_FLAG(std::string, pgarbled_input_path, "./pgarbled.pb.bin",
           "path to a pgarbled.pb.bin");
 ABSL_FLAG(uint32_t, nb_evals, 20, "number of evaluations to combine");
+ABSL_FLAG(std::string, png_output_path, "",
+          "if not set it will display using X11 instead of write a .png");
 
 int main(int argc, char** argv) {
   absl::ParseCommandLine(argc, argv);
 
   auto pgarbled_input_path_str = absl::GetFlag(FLAGS_pgarbled_input_path);
   auto nb_evals = absl::GetFlag(FLAGS_nb_evals);
+  auto png_output_path_str = absl::GetFlag(FLAGS_png_output_path);
 
   interstellar::garble::ParallelGarbledCircuit parallel_garbled_circuit;
   interstellar::garble::DeserializeFromFile(&parallel_garbled_circuit,
                                             pgarbled_input_path_str);
 
-  interstellar::testing::EvalAndDisplay(parallel_garbled_circuit, nb_evals);
+  interstellar::testing::EvalAndDisplay(parallel_garbled_circuit, nb_evals,
+                                        png_output_path_str);
 
   return 0;
 }

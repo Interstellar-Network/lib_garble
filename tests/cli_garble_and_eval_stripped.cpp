@@ -36,6 +36,8 @@ ABSL_FLAG(std::string, pgarbled_stripped_output_path, "./pgarbled.pb.bin",
 ABSL_FLAG(std::vector<std::string>, digits,
           std::vector<std::string>({"4", "2"}),
           "digits for the message/pinpad");
+ABSL_FLAG(std::string, png_output_path, "",
+          "if not set it will display using X11 instead of write a .png");
 
 /**
  * This is just a way to have an all in one cli that garbles then eval.
@@ -51,6 +53,7 @@ int main(int argc, char** argv) {
   auto pgarbled_stripped_output_path_str =
       absl::GetFlag(FLAGS_pgarbled_stripped_output_path);
   auto digits_str = absl::GetFlag(FLAGS_digits);
+  auto png_output_path_str = absl::GetFlag(FLAGS_png_output_path);
 
   auto skcd_buf =
       interstellar::interstellar_testing::utils::ReadFile(skcd_input_path_str);
@@ -82,7 +85,8 @@ int main(int argc, char** argv) {
   auto packmsg = packmsg::PackmsgFromPrepacket(prepackmsg, L"test\nmessage");
 
   // TODO EvalAndDisplayWithPackg; EvalAndDisplay SHOULD return garbage values
-  testing::EvalAndDisplayWithPackmsg(pgc, packmsg, nb_evals);
+  testing::EvalAndDisplayWithPackmsg(pgc, packmsg, nb_evals,
+                                     png_output_path_str);
 
   return 0;
 }
