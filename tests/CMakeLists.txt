@@ -80,5 +80,6 @@ add_google_test(cli_garble "garble_helper serialize_pgc_lib testing_utils_files 
 add_google_test(cli_garble_and_eval_stripped "garble_helper serialize_pgc_lib packmsg_helper utils_eval testing_utils_files absl::flags absl::flags_parse")
 add_google_test(cli_garble_and_eval "garble_helper serialize_pgc_lib utils_eval testing_utils_files absl::flags absl::flags_parse")
 add_google_test(cli_eval "evaluate_lib utils_eval serialize_pgc_lib absl::flags absl::flags_parse")
+add_google_test(cli_eval_stripped "evaluate_lib utils_eval serialize_pgc_lib serialize_packmsg_lib testing_utils_files absl::flags absl::flags_parse")
 
 ################################################################################

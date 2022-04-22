@@ -16,6 +16,7 @@
 
 #include "stripped_circuit.h"
 
+#include <absl/container/flat_hash_set.h>
 #include <absl/random/bit_gen_ref.h>
 #include <absl/random/random.h>
 
@@ -121,6 +122,15 @@ void internal::StripCircuit(garble::ParallelGarbledCircuit *pgc,
   pre_packmsg->SetLabels(std::move(labels));
   pre_packmsg->SetXormask(std::move(xormask));
   pre_packmsg->SetConfig(std::move(pgc->config_));
+
+  // config: remove most fields from the pgc, but keep ONLY the ones needed for
+  // evaluation
+  absl::flat_hash_set<std::string_view> config_whitelist{"WIDTH", "HEIGHT"};
+  for (auto const &[key, val] : pre_packmsg->GetConfig()) {
+    if (config_whitelist.contains(key)) {
+      pgc->config_.try_emplace(key, val);
+    }
+  }
 }
 
 void StripCircuit(garble::ParallelGarbledCircuit *pgc, PrePackmsg *pre_packmsg,
