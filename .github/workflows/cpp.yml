@@ -1,0 +1,27 @@
+name: Install CMake, Build then Test
+
+on:
+  push:
+
+jobs:
+  cpp:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/interstellar-network/ci-images/ci-base-cpp:latest
+    steps:
+      # install build dependencies
+      # MUST match the same step in Dockerfile
+      # NOTE: libx11-dev only needed if interstellar_lib_garble_HAS_CLIS(default ON)
+      - name: Install dependencies
+        run: apt-get update && apt-get install -y libfreetype-dev libx11-dev libboost-dev
+
+      - uses: Interstellar-Network/gh-actions/prepare@v1.0.0
+        with:
+          ssh_key_input: ${{ inputs.ssh_key_input }}
+          install_cmake_and_ninja: true
+
+      - name: DEBUG cpuinfo
+        run: |
+          cat /proc/cpuinfo
+
+      - uses: Interstellar-Network/gh-actions/cmake-build-and-test@v1.0.0

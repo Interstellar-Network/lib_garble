@@ -10,7 +10,7 @@ add_library(justgarble_custom
 
 target_link_libraries(justgarble_custom
     PRIVATE
-    glog
+    glog::glog
     absl::strings
 
     interstellar_protos

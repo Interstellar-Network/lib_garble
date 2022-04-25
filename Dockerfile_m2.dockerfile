@@ -51,8 +51,10 @@ RUN wget https://apt.llvm.org/llvm.sh && \
 ################################################################################
 # TODO above SHOULD be in a "base image cpp builder"
 
+# install build dependencies
+# MUST match the same step in .github/workflows/cmake_build_and_test.yml
 RUN apt-get update && apt-get install -y \
-    libfreetype-dev libboost-filesystem-dev \
+    libfreetype-dev libboost-dev \
     # TEMP: only for the eval_cli
     libx11-dev \
     && rm -rf /var/lib/apt/lists/*

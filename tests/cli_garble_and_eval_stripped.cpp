@@ -22,6 +22,7 @@
 #include "garble_helper.h"
 #include "packmsg/stripped_circuit.h"
 #include "packmsg_helper.h"
+#include "serialize_packmsg/serialize.h"
 #include "serialize_pgc/serialize.h"
 #include "utils/utils_files.h"
 #include "utils_eval.h"
@@ -31,8 +32,10 @@ using namespace interstellar;
 ABSL_FLAG(std::string, skcd_input_path, "./skcd.pb.bin",
           "path to a skcd.pb.bin");
 ABSL_FLAG(uint32_t, nb_evals, 20, "number of evaluations to combine");
-ABSL_FLAG(std::string, pgarbled_stripped_output_path, "./pgarbled.pb.bin",
-          "output pgarbled.pb.bin");
+ABSL_FLAG(std::string, pgarbled_stripped_output_path,
+          "./pgarbled.stripped.pb.bin", "output pgarbled.pb.bin");
+ABSL_FLAG(std::string, packmsg_output_path, "./packmsg.pb.bin",
+          "output packmsg.pb.bin");
 ABSL_FLAG(std::vector<std::string>, digits,
           std::vector<std::string>({"4", "2"}),
           "digits for the message/pinpad");
@@ -42,8 +45,7 @@ ABSL_FLAG(std::string, png_output_path, "",
 /**
  * This is just a way to have an all in one cli that garbles then eval.
  *
- * It pretty stupidely serialize to a buffer then deserialize it right
- * after...
+ * WILL also serialize the STRIPPED PGC and PACKMSG to files
  */
 int main(int argc, char** argv) {
   absl::ParseCommandLine(argc, argv);
@@ -52,6 +54,7 @@ int main(int argc, char** argv) {
   auto nb_evals = absl::GetFlag(FLAGS_nb_evals);
   auto pgarbled_stripped_output_path_str =
       absl::GetFlag(FLAGS_pgarbled_stripped_output_path);
+  auto packmsg_output_path_str = absl::GetFlag(FLAGS_packmsg_output_path);
   auto digits_str = absl::GetFlag(FLAGS_digits);
   auto png_output_path_str = absl::GetFlag(FLAGS_png_output_path);
 
@@ -78,13 +81,20 @@ int main(int argc, char** argv) {
   packmsg::PrePackmsg prepackmsg;
   packmsg::StripCircuit(&pgc, &prepackmsg, digits);
 
+  garble::Serialize(pgc, pgarbled_stripped_output_path_str);
+
   // typically prepackmsg stored in DB + pgc(stripped) sent to user
   /***************************** LATER
    * ****************************************/
   // at tx time: packmsg generated then sent to user
   auto packmsg = packmsg::PackmsgFromPrepacket(prepackmsg, L"test\nmessage");
 
-  // TODO EvalAndDisplayWithPackg; EvalAndDisplay SHOULD return garbage values
+  std::fstream output(packmsg_output_path_str,
+                      std::ios::out | std::ios::trunc | std::ios::binary);
+  output << packmsg::SerializePackmsg(packmsg);
+
+  // TODO EvalAndDisplayWithPackg; EvalAndDisplay SHOULD return garbage
+  // values
   testing::EvalAndDisplayWithPackmsg(pgc, packmsg, nb_evals,
                                      png_output_path_str);
 
