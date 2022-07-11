@@ -4,7 +4,10 @@ project(interstellar_garble)
 
 ################################################################################
 
-option(interstellar_garble_BUILD_TESTS "Build tests" ON)
+include(CMakeDependentOption)
+
+option(interstellar_lib_garble_BUILD_TESTS "Build tests" ON)
+cmake_dependent_option(interstellar_lib_garble_HAS_CLIS "Build the various testing cli" ON "interstellar_lib_garble_BUILD_TESTS;" ON)
 
 ################################################################################
 
@@ -27,7 +30,7 @@ include(deps/protos.cmake)
 add_subdirectory(data)
 add_subdirectory(src)
 
-if (interstellar_garble_BUILD_TESTS)
+if(interstellar_lib_garble_BUILD_TESTS)
   enable_testing()
   add_subdirectory(tests)
-endif (interstellar_garble_BUILD_TESTS)
+endif(interstellar_lib_garble_BUILD_TESTS)

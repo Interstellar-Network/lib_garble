@@ -17,19 +17,21 @@
 #include <gtest/gtest.h>
 
 #include "evaluate/evaluate.h"
+#include "garble_helper.h"
 #include "justgarble/justGarble.h"
 #include "parallel_garbled_circuit/parallel_garbled_circuit.h"
 #include "resources.h"
+#include "serialize_pgc/serialize.h"
+#include "utils/utils_files.h"
 
-using namespace interstellar::garble;
-using namespace interstellar::packmsg;
+using namespace interstellar;
 
 TEST(EvaluateTest, Adder) {
-  GarbledCircuit garbled(
-      std::filesystem::path(interstellar::interstellar_testing::data_dir) /
-      std::string("adder.skcd.pb.bin"));
-  garbled.Garble();
-  ParallelGarbledCircuit pgc(std::move(garbled));
+  // deserialize from reference instead of re-garbling
+  garble::ParallelGarbledCircuit pgc;
+  garble::DeserializeFromFile(
+      &pgc, std::filesystem::path(interstellar_testing::data_dir) /
+                std::string("adder.pgarbled.pb.bin"));
 
   // input  i_bit1;
   // input  i_bit2;

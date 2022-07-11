@@ -21,7 +21,7 @@ target_link_libraries(garble_helper
     pgc_lib
 
     PRIVATE
-    glog
+    glog::glog
     absl::strings
 )
 
