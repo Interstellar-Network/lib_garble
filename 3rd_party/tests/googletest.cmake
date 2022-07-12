@@ -1,4 +1,4 @@
-include(${PROJECT_SOURCE_DIR}/3rd_party/_conan.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../_conan.cmake)
 
 ################################################################################
 
