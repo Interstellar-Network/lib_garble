@@ -60,13 +60,13 @@ endfunction(compile_proto_cpp)
 
 ################################################################################
 
-compile_proto_cpp("./deps/protos/circuits/block.proto")
-compile_proto_cpp("./deps/protos/circuits/circuit.proto")
+compile_proto_cpp("${CMAKE_CURRENT_LIST_DIR}/protos/circuits/block.proto")
+compile_proto_cpp("${CMAKE_CURRENT_LIST_DIR}/protos/circuits/circuit.proto")
 # ideally we SHOULD split the proto in two distinct lib
 # .skcd for the input, .pgarbled for the output and both are separate folders in src/
-compile_proto_cpp("./deps/protos/skcd/skcd.proto")
-compile_proto_cpp("./deps/protos/circuits/prepackmsg.proto")
-compile_proto_cpp("./deps/protos/circuits/packmsg.proto")
+compile_proto_cpp("${CMAKE_CURRENT_LIST_DIR}/protos/skcd/skcd.proto")
+compile_proto_cpp("${CMAKE_CURRENT_LIST_DIR}/protos/circuits/prepackmsg.proto")
+compile_proto_cpp("${CMAKE_CURRENT_LIST_DIR}/protos/circuits/packmsg.proto")
 
 ################################################################################
 
