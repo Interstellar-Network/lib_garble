@@ -13,9 +13,7 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
-                "interstellar_lib_garble_BUILD_TESTS": "OFF",
-                "CMAKE_C_COMPILER_LAUNCHER": "$penv{ENV_CMAKE_C_COMPILER_LAUNCHER}",
-                "CMAKE_CXX_COMPILER_LAUNCHER": "$penv{ENV_CMAKE_CXX_COMPILER_LAUNCHER}"
+                "interstellar_lib_garble_BUILD_TESTS": "OFF"
             }
         },
         {
