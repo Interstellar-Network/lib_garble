@@ -41,8 +41,8 @@ ABSL_FLAG(std::vector<std::string>, digits,
           "digits for the message/pinpad");
 ABSL_FLAG(std::string, png_output_path, "",
           "if not set it will display using X11 instead of write a .png");
-ABSL_FLAG(std::string, message,
-          "0.5 ETH to\n0x71C7656EC7ab88b098defB751B7401B5f6d8976F\n€@éà",
+ABSL_FLAG(std::string, message, "0.23 DOT\nTO ALICE\n€@éà",
+          // help string:
           "the message to use for the packmsg; \"pinpad mode\" SHOULD use an "
           "empty message");
 

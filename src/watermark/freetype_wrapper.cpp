@@ -22,7 +22,7 @@ FreeType::FreeType() {
   // TODO: correct font path(put the ttf in lib_server)
   error = FT_New_Face(
       library_,
-      absl::StrCat(interstellar::garble::data_dir, "/Beatles Light Light.ttf")
+      absl::StrCat(interstellar::garble::data_dir, "/BF_Modernista-Regular.ttf")
           .c_str(),
       0, &face_);
   if (error == FT_Err_Unknown_File_Format) {
