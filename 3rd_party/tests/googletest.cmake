@@ -1,48 +1,51 @@
-include(${CMAKE_CURRENT_LIST_DIR}/../_conan.cmake)
+# ##############################################################################
+# conan with "BUILD all" recompile both openssl and CMake from source??
+if(USE_CONAN)
+  include(${CMAKE_CURRENT_LIST_DIR}/../_conan.cmake)
 
-################################################################################
+  include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-include(${CMAKE_BINARY_DIR}/conan.cmake)
+  conan_cmake_configure(REQUIRES gtest/1.12.1
+    GENERATORS cmake_find_package)
 
-conan_cmake_configure(REQUIRES gtest/1.11.0
-                      GENERATORS cmake_find_package)
+  # NO!
+  # FAIL:
+  # ERROR: Missing prebuilt package for...
+  # - We DO NOT care if the package was built with gcc even if locally we are using clang
+  # - We WANT to always use Release libs even when building Debug locally(SHOULD be configurable)
+  # --> only works reliably with "BUILD all" cf below for details
+  conan_cmake_autodetect(settings)
+  message(STATUS "conan settings : ${settings}")
 
-# NO!
-# FAIL:
-# ERROR: Missing prebuilt package for...
-# - We DO NOT care if the package was built with gcc even if locally we are using clang
-# - We WANT to always use Release libs even when building Debug locally(SHOULD be configurable)
-# conan_cmake_autodetect(settings)
+  conan_cmake_install(PATH_OR_REFERENCE .
+    REMOTE conancenter
 
-message(WARNING "settings : ${settings}")
+    # IMPORTANT, b/c it ends up impacting ABSL_OPTION_USE_STD_STRING_VIEW
+    # which is 0 without this, which means it uses absl internal string_view
+    # which means there is NO conversion from str::string_view -> absl::string_view
+    # and that breaks a lot of function
+    # MUST AT LEAST set # SETTINGS compiler.cppstd=${CMAKE_CXX_STANDARD}
+    SETTINGS ${settings}
 
-conan_cmake_install(PATH_OR_REFERENCE .
-                    # NO! we WANT the prebuilt binary
-                    # BUILD missing
-                    REMOTE conancenter
-                    # SETTINGS ${settings}
-                    # same kind of issues than abseil(absl)
-                    # error: undefined symbol: testing::Matcher<std::basic_string_view<char, std::char_traits<char> > const&>::Matcher(char const*)git >>> referenced by segments2pixels_test.cpp
-                    SETTINGS compiler.cppstd=${CMAKE_CXX_STANDARD}
-                    # IMPORTANT: we MUST make sure we have repeatable builds, DO NOT use "missing"
-                    # else we get random "Exception: Illegal" during tests in CI
-                    BUILD all
-)
+    # IMPORTANT: we MUST make sure we have repeatable builds, DO NOT use "missing"
+    # else we get random "Exception: Illegal" during tests in CI
+    BUILD all
+  )
 
-# cf build/tests/FindGTest.cmake for the vars
-find_package(GTest REQUIRED)
+  # cf build/tests/FindGTest.cmake for the vars
+  find_package(GTest REQUIRED)
 
-include(GoogleTest)
+  include(GoogleTest)
 
-return()
+  return()
+endif(USE_CONAN)
 
-################################################################################
-
+# ###############################################################################
 include(FetchContent)
 FetchContent_Declare(
   googletest
-  # Commits on Feb 14, 2022
-  URL https://github.com/google/googletest/archive/ea55f1f52c489535f0d3b583c81529762c9cb5ea.zip
+
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
 )
 
 # "For Windows: Prevent overriding the parent project's compiler/linker settings"
