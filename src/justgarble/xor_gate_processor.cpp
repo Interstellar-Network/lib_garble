@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <limits>
 
 XorGateProcessor::XorGateProcessor(std::vector<char> &&allXORGates)
     : to_be_processed_(std::move(allXORGates)) {
