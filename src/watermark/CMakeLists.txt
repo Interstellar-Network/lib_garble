@@ -1,4 +1,4 @@
-################################################################################
+# ###############################################################################
 
 find_package(Freetype REQUIRED)
 
@@ -9,8 +9,7 @@ find_package(Freetype REQUIRED)
 # MAYBE ALIAS_GLOBAL?
 set_target_properties(Freetype::Freetype PROPERTIES IMPORTED_GLOBAL TRUE)
 
-################################################################################
-
+# ###############################################################################
 add_library(watermark_lib
     freetype_wrapper.cpp
     watermark.cpp
@@ -18,6 +17,7 @@ add_library(watermark_lib
 
 target_include_directories(watermark_lib
     INTERFACE
+
     # that way users will need to #include "evaluate/evaluate.h"
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
@@ -27,6 +27,7 @@ target_link_libraries(watermark_lib
     glog::glog
     Freetype::Freetype
     absl::strings
+    utf8::cpp
 
     resources
 )

@@ -17,6 +17,7 @@
 #include "watermark.h"
 
 #include <glog/logging.h>
+#include <utf8.h>
 
 #include "freetype_wrapper.h"
 
@@ -64,7 +65,7 @@ namespace interstellar::internal::watermark {
 
 // TODO randomize position
 // TODO layout text with harfbuzz(cf skia code), and justify?
-std::vector<uint8_t> DrawText(const std::wstring &text_to_draw,
+std::vector<uint8_t> DrawText(const std::string &text_to_draw,
                               uint32_t font_size, uint32_t width,
                               uint32_t height) {
   // No need to work if there is not text to draw
@@ -84,13 +85,12 @@ std::vector<uint8_t> DrawText(const std::wstring &text_to_draw,
   // std::transform(text_to_draw.begin(), text_to_draw.end(),
   //                text_to_draw_upper.begin(), ::toupper);
 
-  // std::wstring &text = text_to_draw_upper;
-
-  const std::wstring &text = text_to_draw;
+  // convert to UTF8
+  std::string text_to_draw_copy;
+  utf8::replace_invalid(text_to_draw.begin(), text_to_draw.end(),
+                        back_inserter(text_to_draw_copy));
 
   // TODO call find max font size and others
-
-  size_t text_size = text.size();
 
   unsigned int img_width = width, img_height = height;
 
@@ -106,13 +106,20 @@ std::vector<uint8_t> DrawText(const std::wstring &text_to_draw,
 
   FreeType &free_type = FreeType::GetInstance();
 
-  for (unsigned int text_it = 0; text_it < text_size; text_it++) {
+  uint32_t curr_char = 0;
+  auto text_begin = text_to_draw_copy.begin();
+  auto text_end = text_to_draw_copy.end();
+
+  while (text_begin != text_end) {
     int bitmap_left, bitmap_top;
-    FT_Bitmap *bitmap = free_type.GetChar(text[text_it], font_size, &advance_x,
+
+    curr_char = utf8::next(text_begin, text_end);
+
+    FT_Bitmap *bitmap = free_type.GetChar(curr_char, font_size, &advance_x,
                                           &bitmap_left, &bitmap_top);
 
     // Handle multiline: += line_height each time we encounter a '\n'
-    if (text[text_it] == '\n') {
+    if (curr_char == '\n') {
       offset_height += free_type.GetLineHeight(font_size);
       pen_x = 0;
       continue;  // DO NOT draw in this case

@@ -61,7 +61,7 @@ void interstellar::packmsg::GarbleAndStrippedSkcdFromBuffer(
 
 packmsg::Packmsg interstellar::packmsg::PackmsgFromPrepacket(
     const packmsg::PrePackmsg &pre_packmsg,
-    const std::wstring &watermark_message) {
+    const std::string &watermark_message) {
   // either set when deserializing, or directly by Prepackmsg
   unsigned int width = pre_packmsg.GetConfig().at("WIDTH");
   unsigned int height = pre_packmsg.GetConfig().at("HEIGHT");

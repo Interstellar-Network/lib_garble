@@ -24,7 +24,7 @@ namespace interstellar::internal::watermark {
 /**
  * return: an "image"(as a raw buffer)
  */
-std::vector<uint8_t> DrawText(const std::wstring &text_to_draw,
+std::vector<uint8_t> DrawText(const std::string &text_to_draw,
                               uint32_t font_size, uint32_t width,
                               uint32_t height);
 
