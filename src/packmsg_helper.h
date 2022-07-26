@@ -48,7 +48,7 @@ namespace interstellar::packmsg {
 void GarbleAndStrippedSkcdFromBuffer(std::string_view skcd_buffer,
                                      garble::ParallelGarbledCircuit *pgc,
                                      PrePackmsg *pre_packmsg,
-                                     std::vector<uint8_t> *digits);
+                                     const std::vector<uint8_t> &digits);
 
 Packmsg PackmsgFromPrepacket(const PrePackmsg &pre_packmsg,
                              const std::string &watermark_message);

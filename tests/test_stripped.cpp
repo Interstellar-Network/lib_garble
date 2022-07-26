@@ -34,9 +34,9 @@ TEST(StrippedTest, DisplayOk) {
 
   garble::ParallelGarbledCircuit pgc;
   packmsg::PrePackmsg pre_packmsg;
-  std::vector<uint8_t> digits;
+  std::vector<uint8_t> digits{0, 1};
   packmsg::GarbleAndStrippedSkcdFromBuffer(skcd_buf, &pgc, &pre_packmsg,
-                                           &digits);
+                                           digits);
 
   auto prepackmsg_buf = packmsg::SerializePrepackmsg(pre_packmsg);
 
@@ -57,7 +57,7 @@ TEST(StrippedTest, GenericMustNotCrash) {
   std::vector<uint8_t> digits;
 
   EXPECT_THROW(packmsg::GarbleAndStrippedSkcdFromBuffer(skcd_buf, &pgc,
-                                                        &pre_packmsg, &digits),
+                                                        &pre_packmsg, digits),
                std::logic_error);
 
   EXPECT_EQ(pgc.nb_gates_, 9);
@@ -80,9 +80,9 @@ TEST(StrippedTest, PrePackmsgSerializationOk) {
 
   garble::ParallelGarbledCircuit pgc;
   packmsg::PrePackmsg pre_packmsg;
-  std::vector<uint8_t> digits;
+  std::vector<uint8_t> digits{0, 1};
   packmsg::GarbleAndStrippedSkcdFromBuffer(skcd_buf, &pgc, &pre_packmsg,
-                                           &digits);
+                                           digits);
 
   auto prepackmsg_buf = packmsg::SerializePrepackmsg(pre_packmsg);
   auto prepackmsg_copy =
@@ -101,9 +101,9 @@ TEST(StrippedTest, PackmsgSerializationOk) {
 
   garble::ParallelGarbledCircuit pgc;
   packmsg::PrePackmsg pre_packmsg;
-  std::vector<uint8_t> digits;
+  std::vector<uint8_t> digits{0, 1};
   packmsg::GarbleAndStrippedSkcdFromBuffer(skcd_buf, &pgc, &pre_packmsg,
-                                           &digits);
+                                           digits);
 
   packmsg::Packmsg packmsg =
       packmsg::PackmsgFromPrepacket(pre_packmsg, "test message");

@@ -51,7 +51,6 @@ target_link_libraries(packmsg_helper
     PRIVATE
     glog::glog
     absl::strings
-    absl::random_random
 
     packmsg
     garble_helper
