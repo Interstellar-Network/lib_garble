@@ -106,7 +106,7 @@ TEST(StrippedTest, PackmsgSerializationOk) {
                                            &digits);
 
   packmsg::Packmsg packmsg =
-      packmsg::PackmsgFromPrepacket(pre_packmsg, L"test message");
+      packmsg::PackmsgFromPrepacket(pre_packmsg, "test message");
 
   auto packmsg_buf = packmsg::SerializePackmsg(packmsg);
   auto packmsg_copy = packmsg::DeserializePackmsgFromBuffer(packmsg_buf);

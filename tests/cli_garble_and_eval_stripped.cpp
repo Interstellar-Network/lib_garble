@@ -41,6 +41,10 @@ ABSL_FLAG(std::vector<std::string>, digits,
           "digits for the message/pinpad");
 ABSL_FLAG(std::string, png_output_path, "",
           "if not set it will display using X11 instead of write a .png");
+ABSL_FLAG(std::string, message,
+          "0.5 ETH to\n0x71C7656EC7ab88b098defB751B7401B5f6d8976F\n€@éà",
+          "the message to use for the packmsg; \"pinpad mode\" SHOULD use an "
+          "empty message");
 
 /**
  * This is just a way to have an all in one cli that garbles then eval.
@@ -57,6 +61,7 @@ int main(int argc, char** argv) {
   auto packmsg_output_path_str = absl::GetFlag(FLAGS_packmsg_output_path);
   auto digits_str = absl::GetFlag(FLAGS_digits);
   auto png_output_path_str = absl::GetFlag(FLAGS_png_output_path);
+  auto message_str = absl::GetFlag(FLAGS_message);
 
   auto skcd_buf =
       interstellar::interstellar_testing::utils::ReadFile(skcd_input_path_str);
@@ -87,7 +92,7 @@ int main(int argc, char** argv) {
   /***************************** LATER
    * ****************************************/
   // at tx time: packmsg generated then sent to user
-  auto packmsg = packmsg::PackmsgFromPrepacket(prepackmsg, L"test\nmessage");
+  auto packmsg = packmsg::PackmsgFromPrepacket(prepackmsg, message_str);
 
   std::fstream output(packmsg_output_path_str,
                       std::ios::out | std::ios::trunc | std::ios::binary);

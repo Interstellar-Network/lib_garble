@@ -51,6 +51,6 @@ void GarbleAndStrippedSkcdFromBuffer(std::string_view skcd_buffer,
                                      std::vector<uint8_t> *digits);
 
 Packmsg PackmsgFromPrepacket(const PrePackmsg &pre_packmsg,
-                             const std::wstring &watermark_message);
+                             const std::string &watermark_message);
 
 }  // namespace interstellar::packmsg
