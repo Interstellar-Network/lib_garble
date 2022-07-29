@@ -16,7 +16,6 @@
 
 #include "packmsg_helper.h"
 
-#include <absl/random/random.h>
 #include <absl/strings/str_join.h>
 #include <glog/logging.h>
 
@@ -30,7 +29,7 @@ using namespace interstellar;
 
 void interstellar::packmsg::GarbleAndStrippedSkcdFromBuffer(
     std::string_view skcd_buffer, garble::ParallelGarbledCircuit *pgc,
-    PrePackmsg *pre_packmsg, std::vector<uint8_t> *digits) {
+    PrePackmsg *pre_packmsg, const std::vector<uint8_t> &digits) {
   *pgc = garble::GarbleSkcdFromBuffer(skcd_buffer);
 
   // CHECK: is it a "display circuit"
@@ -47,16 +46,29 @@ void interstellar::packmsg::GarbleAndStrippedSkcdFromBuffer(
         "GarbleAndStrippedSkcdFromBuffer: not a display circuit");
   }
 
-  // randomize digits
-  absl::BitGen bitgen;
-  digits->reserve(nb_digits_expected);
-  for (uint32_t i = 0; i < nb_digits_expected; ++i) {
-    // "Samples an integer from [0, 10)"
-    digits->emplace_back(absl::Uniform(bitgen, 0, 10));
+  // CHECK: if digits are valid
+  // - size MUST match NB_DIGITS
+  if (digits.size() != nb_digits_expected) {
+    LOG(ERROR) << "GarbleAndStrippedSkcdFromBuffer \"digits\" param MUST match "
+                  "config[NB_DIGITS]";
+    throw std::logic_error(
+        "GarbleAndStrippedSkcdFromBuffer \"digits\" param MUST match "
+        "config[NB_DIGITS]");
   }
-  assert(digits->size() == nb_digits_expected && "size mismatch!");
+  // - each MUST be [0-9]
+  if (std::any_of(digits.cbegin(), digits.cend(), [](uint8_t elem) {
+        // "elem < 0" NOT needed b/c uint8_t "error: comparison is always true
+        // due to limited range of data type"
+        return elem > 9;
+      })) {
+    LOG(ERROR) << "GarbleAndStrippedSkcdFromBuffer \"digits\" param MUST only "
+                  "contain [0-9] ";
+    throw std::logic_error(
+        "GarbleAndStrippedSkcdFromBuffer \"digits\" param MUST only contain "
+        "[0-9]");
+  }
 
-  StripCircuit(pgc, pre_packmsg, *digits);
+  StripCircuit(pgc, pre_packmsg, digits);
 }
 
 packmsg::Packmsg interstellar::packmsg::PackmsgFromPrepacket(
